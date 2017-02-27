@@ -32,6 +32,13 @@ const convertJsonToTs = (jsonContent: any) => {
             jsonContent[key] = "boolean";
         } else if (typeof value == 'number') {
             jsonContent[key] = "number";
+        } else if (Array.isArray(value)) {
+            // just catch most use case.
+            if (value.length && typeof value[0] == 'string') {
+                jsonContent[key] = "string[]";
+            } else {
+                jsonContent[key] = "never[]";
+            }
         } else {
             jsonContent[key] = "any";
             // optionalKeys.push(key);
@@ -70,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
                 if (result && result !== 'null') {
                     const xentity = `declare interface XEntity ${result}`
                     ncp.copy(xentity, (err) => {
-                        vscode.window.setStatusBarMessage('Convert json to interface done.Please paste it in your code.', 3000)                        
+                        vscode.window.setStatusBarMessage('Convert json to interface done.Please paste it in your code.', 3000)
                     })
                 } else {
                     vscode.window.setStatusBarMessage('Clipboard is Empty Or not a valid JSON string.', 3000)
