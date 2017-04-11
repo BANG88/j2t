@@ -39,6 +39,8 @@ const convertJsonToTs = (jsonContent: any) => {
             } else {
                 jsonContent[key] = "never[]";
             }
+        } else if (typeof value == 'object') {
+            jsonContent[key] = convertJsonToTs(value)
         } else {
             jsonContent[key] = "any";
             // optionalKeys.push(key);
